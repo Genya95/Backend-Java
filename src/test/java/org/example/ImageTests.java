@@ -6,26 +6,22 @@ import static org.hamcrest.Matchers.is;
 
 public class ImageTests extends BaseClass {
 
-
-
-
     @Test
     void postFavoriteAnImageTest() {
         given()
-                .headers("Authorization", token)
+                .spec(requestSpecification)
                 .expect()
                 .body("success", is(true))
                 .when()
                 .get("https://api.imgur.com/3/image/{imageHash}/favorite",imageHash )
                 .prettyPeek()
                 .then()
-                .statusCode(200)
-                .contentType("application/json");
+                .spec(responseSpec);
     }
     @Test
     void postUpdateImageInformationTest() {
         given()
-                .headers("Authorization", token)
+                .spec(requestSpecification)
                 .multiPart("title","Update Information")
                 .multiPart("description","New post")
                 .expect()
@@ -34,13 +30,12 @@ public class ImageTests extends BaseClass {
                 .get("https://api.imgur.com/3/image/{imageHash}/favorite",imageHash )
                 .prettyPeek()
                 .then()
-                .statusCode(200)
-                .contentType("application/json");
+                .spec(responseSpec);
     }
     @Test
     void postAlbumCreationTest() {
          given()
-                .headers("Authorization", token)
+                .spec(requestSpecification)
                 .multiPart("cover",imageHash)
                 .multiPart("title","new album_02")
                 .multiPart("ids[]", imageHash)
@@ -48,14 +43,14 @@ public class ImageTests extends BaseClass {
                 .post("https://api.imgur.com/3/album" )
                 .prettyPeek()
                 .then()
-                 .statusCode(200);
+                .spec(responseSpec);
 
 
     }
     @Test
     void postRemoveImagesFromAnAlbumTest() {
         given()
-                .headers("Authorization", token)
+                .spec(requestSpecification)
                 .multiPart("ids[]",imageHash)
                 .expect()
                 .body("success", is(true))
@@ -63,8 +58,7 @@ public class ImageTests extends BaseClass {
                 .post("https://api.imgur.com/3/album/{albumDeleteHash}/remove_images", albumDeleteHash )
                 .prettyPeek()
                 .then()
-                .statusCode(200)
-                .contentType("application/json");
+                .spec(responseSpec);
     }
 
 
