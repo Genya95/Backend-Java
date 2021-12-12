@@ -1,31 +1,30 @@
 package org.example;
-
 import org.junit.jupiter.api.Test;
-
 import static io.restassured.RestAssured.given;
 
-
 public class AccountTests extends BaseClass {
+
 
 
     @Test
     void getAccountInfoTest() {
         given()
-                .headers("Authorization", token)
+                .spec(requestSpecification)
                 .log()
                 .method()
                 .log()
                 .uri()
                 .when()
                 .get("https://api.imgur.com/3/account/{username}", username)
+                .prettyPeek()
                 .then()
-                .statusCode(200);
+                .spec(responseSpec);
     }
 
     @Test
     void getAccountImagesTest() {
          imageHash=given()
-                .headers("Authorization", token)
+                .spec(requestSpecification)
                 .log()
                 .method()
                 .log()
@@ -46,20 +45,19 @@ public class AccountTests extends BaseClass {
     @Test
     void putChangeAccountSettingsTest() {
         given()
-                .headers("Authorization", token)
+                .spec(requestSpecification)
                 .multiPart("public_images", true)
                 .multiPart("messaging_enabled", false)
                 .when()
                 .put("https://api.imgur.com/3/account/{username}/settings", username)
                 .prettyPeek()
                 .then()
-                .statusCode(200)
-                .contentType("application/json");
+                .spec(responseSpec);
     }
     @Test
     void getGalleryTagsTest() {
         given()
-                .headers("Authorization", token)
+                .spec(requestSpecification)
                 .log()
                 .method()
                 .log()
@@ -68,6 +66,7 @@ public class AccountTests extends BaseClass {
                 .get("https://api.imgur.com/3/tags")
                 .prettyPeek()
                 .then()
+                .spec(responseSpec)
                 .extract()
                 .response()
                 .jsonPath()
@@ -76,16 +75,16 @@ public class AccountTests extends BaseClass {
     @Test
     void postFollowTagTest() {
         given()
-                .headers("Authorization", token)
+                .spec(requestSpecification)
                 .log()
                 .method()
                 .log()
                 .uri()
                 .when()
-                .post("https://api.imgur.com/3/account/me/follow/tag/{tagName}", "disney")
+                .post("https://api.imgur.com/3/account/me/follow/tag/{tagName}", "secret_santa_workshop")
                 .prettyPeek()
                 .then()
-                .statusCode(200);
+                .spec(responseSpec);
     }
 
 

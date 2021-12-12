@@ -2,15 +2,18 @@ package org.example;
 
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.http.ContentType;
+import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 public abstract class BaseClass {
@@ -20,6 +23,9 @@ public abstract class BaseClass {
     static String imageHash;
     static String imageDeleteHash;
     static String albumDeleteHash;
+    ResponseSpecification responseSpec;
+    RequestSpecification requestSpecification;
+
 
     @BeforeAll
      static void beforeAll(){
@@ -31,8 +37,6 @@ public abstract class BaseClass {
     imageHash = properties.getProperty("imageHash");
     imageDeleteHash = properties.getProperty("imageDeleteHash");
         albumDeleteHash = properties.getProperty("albumDeleteHash");
-
-
     }
 
     private static void getProperties(){
@@ -42,5 +46,18 @@ public abstract class BaseClass {
             e.printStackTrace();
         }
     }
+    @BeforeEach
+    void beforeTests(){
+     responseSpec= new ResponseSpecBuilder()
+            .expectStatusCode(200)
+            .expectStatusLine("HTTP/1.1 200 OK")
+            .expectContentType(ContentType.JSON)
+            .build();
+     requestSpecification = new RequestSpecBuilder()
+             .addHeader("Authorization", token)
+             .build();
+
+    }
+
 
 }
